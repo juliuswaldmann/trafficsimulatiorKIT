@@ -86,3 +86,6 @@ out
 
 #################
 .gradle
+
+#################
+checkstyle-required.xml
