@@ -13,6 +13,8 @@ import java.util.TreeMap;
 
 public class Street {
 
+    public static final int CAR_MINIMUM_DISTANCE = 10;
+
     /** The length of the street in meters (min 5, max 40)*/
     private int length;
     
@@ -20,6 +22,8 @@ public class Street {
     private int maxSpeed;
 
     private int type;
+
+    private boolean overtakeable;
 
     private int startNode;
 
@@ -56,7 +60,19 @@ public class Street {
 
     }
 
-    public void updateCars() {
+    public void updateCarSpeeds() {
+        for (Entry<Integer, Car> entry : cars.entrySet()) {
+            Car car = entry.getValue();
+            car.updateSpeed(maxSpeed);
+        }
+    }
+
+    /**
+     * This method cycles through every car on the street 
+     * from the last one to the first one and calculates
+     * the new position of the car after overtaking etc //TODO rewrite this
+     */
+    public void updateCarPositions() {
 
         ArrayList<Integer> keySet = new ArrayList<Integer>(cars.keySet());
         Collections.sort(keySet);
@@ -64,37 +80,116 @@ public class Street {
         NavigableMap<Integer, Car> updatedMap = new TreeMap<>();
 
         
-        
         Entry<Integer, Car> entry;
-        while ((entry = cars.pollFirstEntry()) != null) {
-            Integer position = entry.getKey();
+        while ((entry = cars.pollFirstEntry()) != null) { //cycle through all cars in order
+
+            int initialPosition = entry.getKey();
             Car car = entry.getValue();
 
-            Entry<Integer, Car> nextCar = cars.higherEntry(entry.getKey());
-            Entry<Integer, Car> carInFrontOfMe;
-            //Check if I was overtaken
-            int carInFrontOfMePosition;
-            if ((carInFrontOfMe = updatedMap.higherEntry(position)) != null) {
-                //I was overtaken
-                //Get position of car in front of me
-                carInFrontOfMePosition = carInFrontOfMe.getKey();
-                
+            Integer nextCarPosition; //has to be "Integer" so it can be "null"
+            if ((nextCarPosition = updatedMap.higherKey(initialPosition)) != null) {
+                //the car in front of the current car overtook the current car
+            } else if ((nextCarPosition = cars.higherKey(initialPosition)) != null) {
+                //the car in front of the current car did not overtake the current car
             } else {
-                //I was not overtaken
-                //Get position of next car in iteration list
-                carInFrontOfMePosition = cars.higherKey(position);
+                //the current car is the farthest car on the street
+                nextCarPosition = length; 
+                //if there is no car in front we set the nextCarPosition to the street length
+                //if this is the case secondNextCarPosition will also be the street length and
+                //the rest of the code will work perfectly
             }
-            
-            int myNewPosition = Math.min(carInFrontOfMePosition - 10, position + car.getCurrentSpeed());
-            
-            
-            //If my speed is less than distance to car in front of me + 10 (minimum distance), I'm too slow :(
-            
 
-            //updatedMap.put(carPosition, entry.getValue());
+            Integer secondNextCarPosition; //Sorry I have no idea how to call this //TODO change this
+            if ((secondNextCarPosition = updatedMap.higherKey(nextCarPosition)) != null) {
+                
+            } else if ((secondNextCarPosition = cars.higherKey(nextCarPosition)) != null) {
+
+            } else {
+                secondNextCarPosition = length;
+            }
+
+            int newPosition;
+            if (
+                overtakeable == true 
+                && (secondNextCarPosition - nextCarPosition) >= (CAR_MINIMUM_DISTANCE * 2) 
+                && car.getCurrentSpeed() >= (nextCarPosition - initialPosition + CAR_MINIMUM_DISTANCE)
+            ) {
+                newPosition = Math.min(car.getCurrentSpeed() + initialPosition, secondNextCarPosition - CAR_MINIMUM_DISTANCE);
+                car.setAlreadyCrossedThisTick(true); //if a car has overtook another, it cannot cross in the same tick!
+            } else {
+                newPosition = Math.min(initialPosition + car.getCurrentSpeed(), nextCarPosition - CAR_MINIMUM_DISTANCE);
+            }
+
+            car.droveMeters(newPosition - initialPosition);
+            updatedMap.put(newPosition, car);
+
+        }
+
+        cars = updatedMap;
+
+    }
+
+    /**
+     * This method gets the Car that is currently at the
+     * end of the street and awaits to cross. It also removes 
+     * the car from the street.
+     * @return the cat that is at the end of the street. 
+     *         If there is none or if the car has no distance 
+     *         left to drive it returns null
+     */
+    public Car getCrossingCar() {
+        Entry<Integer, Car> lastEntry = cars.lastEntry();
+
+        if (lastEntry == null) {
+            return null;
+        }
+
+        if (lastEntry.getValue().getMetersLeftToDrive() == 0) {
+            return null;
+        }
+
+        return lastEntry.getValue();
+
+    }
+
+    public void removeCrossingCar() {
+        Entry<Integer, Car> lastEntry = cars.lastEntry();
+        cars.remove(lastEntry.getKey());
+    }
+
+    public Integer getLastCarPostion() {
+        return cars.firstEntry().getKey();
+    }
+
+    public void carDrivesIn(Car car) {
+
+        int newPosition = Math.min(car.getMetersLeftToDrive(), getLastCarPostion() - 10);
+        car.droveMeters(newPosition);
+
+        cars.put(newPosition, car);
+
+        car.setAlreadyCrossedThisTick(true);
+
+    }
+
+    public boolean isValid() {
+        for (Entry<Integer, Car> carEntry : cars.entrySet()) {
+            Integer nextCarPosition = cars.higherKey(carEntry.getKey());
+            if (nextCarPosition == null && length - carEntry.getKey() < CAR_MINIMUM_DISTANCE) {
+                return false;
+            }
+            if (nextCarPosition - carEntry.getKey() < CAR_MINIMUM_DISTANCE) {
+                return false;
+            }
         }
         
+        return true;
+    }
 
+    public void initTick() {
+        for (Entry<Integer, Car> carEntry : cars.entrySet()) {
+            carEntry.getValue().setAlreadyCrossedThisTick(false);
+        }
     }
 
 }

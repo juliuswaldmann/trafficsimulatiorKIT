@@ -2,6 +2,7 @@ package edu.kit.kastel.trafficsimulation;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import edu.kit.kastel.trafficsimulation.StreetNodes.Crossing;
 import edu.kit.kastel.trafficsimulation.StreetNodes.Roundabout;
@@ -39,9 +40,9 @@ public class SimulationGraph {
     public void addNode(int id, int greenPhaseDuration) {
 
         if (greenPhaseDuration == 0) {
-            nodeMap.put(id, new Roundabout(id));
+            nodeMap.put(id, new Roundabout(this, id));
         } else if (greenPhaseDuration > 0) {
-            nodeMap.put(id, new Crossing(id, greenPhaseDuration));
+            nodeMap.put(id, new Crossing(this, id, greenPhaseDuration));
         } else {
             throw new IllegalArgumentException("Error: The greenPhaseDuration of a node cannot be less than 0");
         }
@@ -61,6 +62,18 @@ public class SimulationGraph {
 
     }
 
+    public Street getStreetById(int id) {
+        return streetMap.get(id);
+    }
+
+    public boolean isValid() {
+        for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
+            if (!streetEntry.getValue().isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
     
 
 }
