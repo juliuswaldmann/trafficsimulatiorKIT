@@ -105,6 +105,14 @@ public class Car {
     }
 
     /**
+     * sets the speed of the car
+     * @param speed Speed of the car
+     */
+    public void setSpeed(int speed) {
+        currentSpeed = speed;
+    }
+
+    /**
      * Returns the current speed of the car
      * @return Current speed of the car
      */
