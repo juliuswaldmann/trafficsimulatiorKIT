@@ -230,14 +230,6 @@ public class SimulationGraph {
             nodeEntry.getValue().handleCrossing();
         }
 
-        // if the car drove 0 meters this tick, set its speed to 0
-        for (Entry<Integer, Car> carEntry : carMap.entrySet()) {
-            Car car = carEntry.getValue();
-            if (car.getDroveMetersThisTick() == 0) {
-                car.setSpeed(0);
-            }
-        }
-
         
     }
 

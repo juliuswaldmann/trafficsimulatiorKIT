@@ -140,9 +140,15 @@ public class Street {
             
 
             car.droveMeters(newPosition - initialPosition);
-            car.trackDrivenMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
             updatedMap.put(newPosition, car.getId());
+
+            if (
+                    nextCarPosition - initialPosition == TrafficSimulation.CAR_MINIMUM_DISTANCE 
+                    && !(overtakeable && enoughSpaceAfter && fastEnough)
+            ) {
+                car.setSpeed(0);
+            }
 
         }
 
