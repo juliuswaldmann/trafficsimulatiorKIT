@@ -32,6 +32,9 @@ public class Car {
     /** ID of the street the car is on */
     private int onStreetID;
 
+    /** variable to count the meters a car drove this tick */
+    private int droveMetersThisTick;
+
     /** ID of the car */
     private int id;
 
@@ -126,7 +129,16 @@ public class Car {
      * @param meters Meters the car has driven
      */
     public void droveMeters(int meters) {
+        droveMetersThisTick += meters;
         metersLeftToDriveThisTick -= meters;
+    }
+
+    /**
+     * Returns the meters the car has driven in this tick
+     * @return Meters the car has driven in this tick
+     */
+    public int getDroveMetersThisTick() {
+        return droveMetersThisTick;
     }
 
     /**

@@ -233,7 +233,7 @@ public class SimulationGraph {
         // if the car drove 0 meters this tick, set its speed to 0
         for (Entry<Integer, Car> carEntry : carMap.entrySet()) {
             Car car = carEntry.getValue();
-            if (car.getMetersLeftToDrive() == car.getCurrentSpeed()) {
+            if (car.getDroveMetersThisTick() == 0) {
                 car.setSpeed(0);
             }
         }
