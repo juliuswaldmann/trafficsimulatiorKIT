@@ -18,7 +18,7 @@ public class Car {
     private int wantedSpeed;
 
     /** The direction the car wants to go to. Starts with 0. */
-    private int wantedDirection = 0;
+    private int wantedDirection = 1;
 
     /** The meters the car has left in this tick */
     private int metersLeftToDriveThisTick;
@@ -146,8 +146,9 @@ public class Car {
         wantedDirection++;
 
         //Reset direction to 0 if it is bigger than 3
-        if (wantedDirection > 3)
-            wantedDirection = 0;
+        if (wantedDirection > 4) {
+            wantedDirection = 1;
+        }
         return direction;
     }
 
