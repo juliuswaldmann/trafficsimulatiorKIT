@@ -138,17 +138,18 @@ public class Street {
             }
 
 
-            
+            //Set speed to 0 if it's stuck behind a slow driver
             if (
                     nextCarPosition - initialPosition == TrafficSimulation.CAR_MINIMUM_DISTANCE 
                     && !noNextCar && !(overtakeable && enoughSpaceAfter && fastEnough)
-                    && !car.hasAlreadyCrossedThisTick()
             ) {
                 car.setSpeed(0);
-            } else {
-                car.droveMeters(newPosition - initialPosition);
-                car.setPositionOnStreet(newPosition);
             }
+
+
+
+            car.droveMeters(newPosition - initialPosition);
+            car.setPositionOnStreet(newPosition);
 
             updatedMap.put(newPosition, car.getId());
 
