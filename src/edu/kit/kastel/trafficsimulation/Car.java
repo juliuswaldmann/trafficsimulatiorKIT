@@ -9,19 +9,55 @@ public class Car {
     private int wantedSpeed;
 
     /** The direction the car wants to go to. Starts with 0. */
-    private int wantedDirection;
+    private int wantedDirection = 0;
 
     private int metersLeftToDrive;
 
     private boolean alreadyCrossedThisTick;
 
-    public void updateSpeed(int speedLimit) {
+    private int positionOnStreet;
+
+    private int onStreetID;
+
+    private int id;
+
+    public Car(int id,int acceleration, int wantedSpeed) {
+        this.id = id;
+        this.acceleration = acceleration;
+        this.wantedSpeed = wantedSpeed;
+    }
+
+    public void setPositionOnStreet(int positionOnStreet) {
+        this.positionOnStreet = positionOnStreet;
+    }
+
+    public int getPositionOnStreet() {
+        return positionOnStreet;
+    }
+
+    public void setOnStreetId(int onStreetID) {
+        this.onStreetID = onStreetID;
+    }
+
+    public int getOnStreetId() {
+        return onStreetID;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getSpeed() {
+        return currentSpeed;
+    }
+
+    public void updateSpeed(int speedLimit) { //y
         //Increase speed by acceleration
         currentSpeed = Math.min(currentSpeed + acceleration, Math.min(wantedSpeed, speedLimit));
         metersLeftToDrive = currentSpeed;
     }
 
-    public int getCurrentSpeed() {
+    public int getCurrentSpeed() { 
         return currentSpeed;
     }
 

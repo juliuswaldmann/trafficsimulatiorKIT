@@ -16,14 +16,11 @@ public class SimulationGraph {
 
     private HashMap<Integer, StreetNode> nodeMap = new HashMap<>();
 
-    /** 
-     * This is an extended form on an adjacencyList commonly used when using graph theory in computer science.
-     * For each Node (represented by an Integer) it stores a set of all connected nodes (from this node to the other)
-     * and maps the according street from the streetMap to this connection.
-     * We do not just store the Streets in this map because having a seperate street map makes it way easier to create
-     * ids for each street. The id of a street is just its key in street map.
-     */
-    private LinkedHashMap<Integer, HashMap<Integer, Integer>> adjacencyMap = new LinkedHashMap<>();
+    private HashMap<Integer, Car> carMap = new HashMap<>();
+
+    public Car getCarById(int id) {
+        return carMap.get(id);
+    }
 
     private int getNewStreetID() {
         return streetIdentifierCounter++;
@@ -53,7 +50,7 @@ public class SimulationGraph {
 
         int id = getNewStreetID();
 
-        Street street = new Street(startNode, endNode, length, type, maxSpeed);
+        Street street = new Street(id, this, startNode, endNode, length, type, maxSpeed);
 
         streetMap.put(id, street);
 
@@ -67,13 +64,85 @@ public class SimulationGraph {
     }
 
     public boolean isValid() {
+        //check if all streets are valid
         for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
             if (!streetEntry.getValue().isValid()) {
                 return false;
             }
         }
+
+        //check if all nodes are valid
+        for (Entry<Integer, StreetNode> nodeEntry : nodeMap.entrySet()) {
+            if (!nodeEntry.getValue().isValid()) {
+                return false;
+            }
+        }
+
+        //if no invalid street or node was found the graph is valid
         return true;
     }
+
+    public boolean containsCar(int carID) {
+        for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
+            if (streetEntry.getValue().containsCar(carID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean streetIdHasSpaceForCar(int streetID) {
+        return streetMap.get(streetID).hasSpaceForCar();
+    }
+
+    public void addCarToStreet(int streetID, Car car) {
+        carMap.put(car.getId(), car);
+        streetMap.get(streetID).addCar(car.getId());
+    }
     
+    public int getCarPosition(int carId) {
+        Car car = carMap.get(carId);
+        return car.getPositionOnStreet();
+    }
+
+    public int getCarOnStreetId(int carId) {
+        Car car = carMap.get(carId);
+        return car.getOnStreetId();
+    }
+
+    public int getCarSpeed(int carId) {
+        Car car = carMap.get(carId);
+        return car.getSpeed();
+    }
+
+    public int getCarPositionOnStreet(int carId) {
+        Car car = carMap.get(carId);
+        return car.getPositionOnStreet();
+    }
+
+    public void tick() {
+        //set all cars to not crossed this tick
+        //and update their speed
+        for (Entry<Integer, Car> carEntry : carMap.entrySet()) {
+            Car car = carEntry.getValue();
+            car.setAlreadyCrossedThisTick(false);
+            int maxSpeed = streetMap.get(car.getOnStreetId()).getMaxSpeed();
+            car.updateSpeed(maxSpeed);
+        }
+
+        //update all car positions
+        for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
+            streetEntry.getValue().updateCarPositions();
+        }
+
+        //handle crossing
+        for (Entry<Integer, StreetNode> nodeEntry : nodeMap.entrySet()) {
+            nodeEntry.getValue().handleCrossing();
+        }
+
+        
+
+        
+    }
 
 }

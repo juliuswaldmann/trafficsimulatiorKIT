@@ -68,12 +68,8 @@ public abstract class StreetNode {
 
         Street outputStreet = parentGraph.getStreetById(connectedOutputStreets.get(outputStreetIndex));
 
-        Integer lastCarOnTargetStreetPosition;
-        if ((lastCarOnTargetStreetPosition = outputStreet.getLastCarPostion()) == null) {
-            return;
-        }
-
-        if (lastCarOnTargetStreetPosition <= CAR_MINIMUM_DISTANCE) { //TODO do we need "<=" or "<" here?
+        Integer lastCarOnTargetStreetPosition = outputStreet.getLastCarPostion();
+        if (lastCarOnTargetStreetPosition != null && lastCarOnTargetStreetPosition <= CAR_MINIMUM_DISTANCE) { //TODO do we need "<=" or "<" here?
             return;
         }
 
@@ -81,6 +77,19 @@ public abstract class StreetNode {
         inputStreet.removeCrossingCar();
 
 
+    }
+
+    public boolean isValid() {
+        if (
+            connectedInputStreets.size() < 1
+            || connectedOutputStreets.size() < 1
+            || connectedInputStreets.size() > 4
+            || connectedOutputStreets.size() > 4
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
 }
