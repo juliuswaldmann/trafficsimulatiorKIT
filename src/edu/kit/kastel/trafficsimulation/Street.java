@@ -136,6 +136,11 @@ public class Street {
             } else {
                 newPosition = Math.min(furthestPosBySpeed, nextCarPosition - TrafficSimulation.CAR_MINIMUM_DISTANCE);
             }
+            
+            // If the car has not moved this tick, we set its speed to 0
+            if (initialPosition == newPosition) {
+                car.setSpeed(0);
+            }
 
             car.droveMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
@@ -151,7 +156,7 @@ public class Street {
      * This method gets the Car that is currently at the
      * end of the street and awaits to cross. It also removes 
      * the car from the street.
-     * @return the cat that is at the end of the street. 
+     * @return the car that is at the end of the street. 
      *         If there is none or if the car has no distance 
      *         left to drive it returns null
      */

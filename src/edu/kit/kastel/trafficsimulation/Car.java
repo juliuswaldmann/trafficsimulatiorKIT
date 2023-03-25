@@ -23,6 +23,7 @@ public class Car {
     /** The meters the car has left in this tick */
     private int metersLeftToDriveThisTick;
 
+    /** True if the car has already crossed a node in this tick or overtook a car */
     private boolean alreadyCrossedThisTick;
 
     /** Position of the car relative to beginning of the street */
@@ -94,6 +95,14 @@ public class Car {
     }
 
     /**
+     * sets the speed of the car
+     * @param speed the speed the car should have 
+     */
+    public void setSpeed(int speed) {
+        currentSpeed = speed;
+    }
+
+    /**
      * updates the speed of the car by adding the acceleration to the current speed
      * and limiting it to the maximum speed
      * @param speedLimit Maximum speed on the street the car is on
@@ -142,16 +151,16 @@ public class Car {
     }
 
     /**
-     * Set distance the car has already driven in this tick
-     * @param meters Meters the car has already driven in this tick
+     * Sets if the car has already crossed a node or passed a car in this tick
+     * @param b True if the car has already crossed a node or passed a car in this tick
      */
-    public void setAlreadyCrossedThisTick(boolean meters) {
-        alreadyCrossedThisTick = meters;
+    public void setAlreadyCrossedThisTick(boolean b) {
+        alreadyCrossedThisTick = b;
     }
 
     /**
-     * Returns the distance the car has already driven in this tick
-     * @return Distance the car has already driven in this tick
+     * Returns if the car has already crossed a node or passed a car in this tick
+     * @return True if the car has already crossed a node or passed a car in this tick
      */
     public boolean hasAlreadyCrossedThisTick() {
         return alreadyCrossedThisTick;
