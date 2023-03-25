@@ -139,9 +139,6 @@ public class Street {
 
             car.droveMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
-            if (newPosition == length) {
-                car.setSpeed(0);
-            }
             updatedMap.put(newPosition, car.getId());
 
         }
