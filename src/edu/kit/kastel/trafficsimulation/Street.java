@@ -168,17 +168,17 @@ public class Street {
      *         left to drive it returns null
      */
     public Car getCrossingCar() {
-        Entry<Integer, Integer> lastEntry = cars.lastEntry();
+        Integer lastEntry = cars.get(length);
 
         if (lastEntry == null) {
             return null;
         }
 
-        if (parentGraph.getCarById(lastEntry.getValue()).getMetersLeftToDrive() == 0) {
+        if (parentGraph.getCarById(lastEntry).getMetersLeftToDrive() == 0) {
             return null;
         }
 
-        return parentGraph.getCarById(lastEntry.getValue());
+        return parentGraph.getCarById(lastEntry);
 
     }
 
@@ -187,8 +187,8 @@ public class Street {
      * end of the street and awaits to cross.
      */
     public void removeCrossingCar() {
-        Entry<Integer, Integer> lastEntry = cars.lastEntry();
-        cars.remove(lastEntry.getKey());
+        Integer lastEntry = cars.get(length);
+        cars.remove(lastEntry);
     }
 
     /**
