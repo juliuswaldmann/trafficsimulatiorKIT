@@ -136,19 +136,20 @@ public class Street {
             } else {
                 newPosition = Math.min(furthestPosBySpeed, nextCarPosition - TrafficSimulation.CAR_MINIMUM_DISTANCE);
             }
-            
-            
 
-            car.droveMeters(newPosition - initialPosition);
-            car.setPositionOnStreet(newPosition);
-            updatedMap.put(newPosition, car.getId());
+            
 
             if (
                     nextCarPosition - initialPosition == TrafficSimulation.CAR_MINIMUM_DISTANCE 
-                    && !(overtakeable && enoughSpaceAfter && fastEnough)
+                    && !noNextCar && !(overtakeable && enoughSpaceAfter && fastEnough)
             ) {
                 car.setSpeed(0);
+            } else {
+                car.droveMeters(newPosition - initialPosition);
+                car.setPositionOnStreet(newPosition);
             }
+
+            updatedMap.put(newPosition, car.getId());
 
         }
 
