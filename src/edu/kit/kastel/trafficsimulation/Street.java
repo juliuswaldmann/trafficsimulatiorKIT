@@ -137,11 +137,12 @@ public class Street {
                 newPosition = Math.min(furthestPosBySpeed, nextCarPosition - TrafficSimulation.CAR_MINIMUM_DISTANCE);
             }
 
-            
 
+            
             if (
                     nextCarPosition - initialPosition == TrafficSimulation.CAR_MINIMUM_DISTANCE 
                     && !noNextCar && !(overtakeable && enoughSpaceAfter && fastEnough)
+                    && !car.hasAlreadyCrossedThisTick()
             ) {
                 car.setSpeed(0);
             } else {
