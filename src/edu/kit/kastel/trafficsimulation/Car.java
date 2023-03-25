@@ -146,7 +146,8 @@ public class Car {
         wantedDirection++;
 
         //Reset direction to 0 if it is bigger than 3
-        wantedDirection %= 4;
+        if (wantedDirection > 3)
+            wantedDirection = 0;
         return direction;
     }
 
