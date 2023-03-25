@@ -226,11 +226,10 @@ public class Street {
         car.droveMeters(newPosition);
         car.setPositionOnStreet(newPosition);
         car.setOnStreetId(this.id);
-
-        cars.put(newPosition, car.getId());
-
         car.setAlreadyCrossedThisTick(true);
 
+        cars.put(newPosition, car.getId());
+        
     }
 
     /**
