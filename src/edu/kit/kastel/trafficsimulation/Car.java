@@ -129,8 +129,15 @@ public class Car {
      * @param meters Meters the car has driven
      */
     public void droveMeters(int meters) {
-        droveMetersThisTick += meters;
         metersLeftToDriveThisTick -= meters;
+    }
+
+    /**
+     * Track the meters the car has driven in this tick (does not include crossing a node)
+     * @param meters Meters the car has driven
+     */
+    public void trackDrivenMeters(int meters) {
+        droveMetersThisTick += meters;
     }
 
     /**

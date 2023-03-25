@@ -140,6 +140,7 @@ public class Street {
             
 
             car.droveMeters(newPosition - initialPosition);
+            car.trackDrivenMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
             updatedMap.put(newPosition, car.getId());
 
