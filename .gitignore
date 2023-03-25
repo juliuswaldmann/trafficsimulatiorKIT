@@ -86,3 +86,7 @@ out
 
 #################
 .gradle
+
+
+checkstyle-*
+.vscode
