@@ -142,12 +142,11 @@ public class Car {
      * @return New direction
      */
     public int getAndIncreaseWantedDirection() {
-        int direction = wantedDirection;
         wantedDirection++;
 
         //Reset direction to 0 if it is bigger than 3
         wantedDirection %= 4;
-        return direction;
+        return wantedDirection;
     }
 
     /**
