@@ -90,7 +90,7 @@ public class Street {
         NavigableMap<Integer, Integer> updatedMap = new TreeMap<>();
 
         Entry<Integer, Integer> entry;
-        while ((entry = cars.pollFirstEntry()) != null) { //cycle through all cars in order
+        while ((entry = cars.pollLastEntry()) != null) { //cycle through all cars in order
 
             int initialPosition = entry.getKey();
             Car car = parentGraph.getCarById(entry.getValue());
@@ -98,17 +98,15 @@ public class Street {
             boolean noNextCar = false;
             Integer nextCarPosition = updatedMap.higherKey(initialPosition); //has to be "Integer" so it can be "null"
 
-            if (nextCarPosition == null) {
+            if (nextCarPosition == null) { //TODO update comments
                 //the car in front of the current car overtook the current car
-                nextCarPosition = cars.higherKey(initialPosition);
-                if (nextCarPosition == null) {
-                    //the current car is the farthest car on the street
-                    nextCarPosition = length; 
-                    noNextCar = true;
-                    //if there is no car in front we set the nextCarPosition to the street length
-                    //if this is the case secondNextCarPosition will also be the street length and
-                    //the rest of the code will work perfectly
-                }
+                //the current car is the farthest car on the street
+                nextCarPosition = length; 
+                noNextCar = true;
+                //if there is no car in front we set the nextCarPosition to the street length
+                //if this is the case secondNextCarPosition will also be the street length and
+                //the rest of the code will work perfectly
+                
             }
 
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
