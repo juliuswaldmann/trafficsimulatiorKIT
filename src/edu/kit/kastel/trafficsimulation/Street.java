@@ -89,7 +89,6 @@ public class Street {
 
         NavigableMap<Integer, Integer> updatedMap = new TreeMap<>();
 
-        
         Entry<Integer, Integer> entry;
         while ((entry = cars.pollFirstEntry()) != null) { //cycle through all cars in order
 
@@ -117,7 +116,6 @@ public class Street {
                 secondNextCarPosition = cars.higherKey(nextCarPosition);
                 if (secondNextCarPosition == null) {
                     secondNextCarPosition = length;
-                    noNextCar = true;
                 }
             }
 
@@ -145,8 +143,6 @@ public class Street {
             ) {
                 car.setSpeed(0);
             }
-
-
 
             car.droveMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
@@ -187,8 +183,7 @@ public class Street {
      * end of the street and awaits to cross.
      */
     public void removeCrossingCar() {
-        Integer lastEntry = cars.get(length);
-        cars.remove(lastEntry);
+        cars.remove(length);
     }
 
     /**
