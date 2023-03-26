@@ -111,11 +111,9 @@ public class Street {
 
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
             if (secondNextCarPosition == null) {
-                secondNextCarPosition = cars.higherKey(nextCarPosition);
-                if (secondNextCarPosition == null) {
-                    secondNextCarPosition = length;
-                }
+                secondNextCarPosition = length;
             }
+            
 
             int newPosition;
             int metersLeftAfterNextCar = secondNextCarPosition - nextCarPosition;
