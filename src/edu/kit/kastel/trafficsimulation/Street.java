@@ -112,7 +112,6 @@ public class Street {
                 nextCarPosition = length; 
                 noNextCar = true;
                 //if there is no car in front we set the nextCarPosition to the street length
-                
             }
 
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
@@ -166,11 +165,7 @@ public class Street {
             } else {
                 updatedMap.put(newPosition, car.getId());
             }
-
-            
-
         }
-
         cars = updatedMap;
     }
 
