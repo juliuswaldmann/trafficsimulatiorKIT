@@ -107,7 +107,7 @@ public class Street {
             boolean noNextCar = false;
             Integer nextCarPosition = updatedMap.higherKey(initialPosition); //has to be "Integer" so it can be "null"
 
-            if (nextCarPosition == null) { //TODO update comments
+            if (nextCarPosition == null) {
                 //the current car is the farthest car on the street
                 nextCarPosition = length; 
                 noNextCar = true;
@@ -147,23 +147,26 @@ public class Street {
             car.droveMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
 
+            //if the car is at the end of the street and it still wants to keep going
             if (newPosition == length && car.getMetersLeftToDrive() > 0) {
                 StreetNode endNode = parentGraph.getNodeById(endNodeID);
 
                 Street streetToCrossTo = endNode.carIdIsAllowedToCrossToWhichStreet(id, car.getWantedDirection());
-                if (streetToCrossTo != null && !car.hasAlreadyCrossedThisTick()) {
+                if (streetToCrossTo == null) {
+                    car.setSpeed(0);
+                } else if (!car.hasAlreadyCrossedThisTick()) {
                     car.increaseWantedDirection();
                     car.setAlreadyCrossedThisTick(true);
                     streetToCrossTo.carDrivesIn(car);
                     
-
                 } else {
-                    car.setSpeed(0);
                     updatedMap.put(newPosition, car.getId());
                 }
             } else {
                 updatedMap.put(newPosition, car.getId());
             }
+
+            
 
         }
 
