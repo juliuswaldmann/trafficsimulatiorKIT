@@ -103,7 +103,7 @@ public class Street {
             }
 
             car.updateSpeed(maxSpeed);
-            
+
             boolean noNextCar = false;
             Integer nextCarPosition = updatedMap.higherKey(initialPosition); //has to be "Integer" so it can be "null"
 
@@ -112,6 +112,7 @@ public class Street {
                 nextCarPosition = length; 
                 noNextCar = true;
                 //if there is no car in front we set the nextCarPosition to the street length
+                
             }
 
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
@@ -134,6 +135,7 @@ public class Street {
             } else {
                 newPosition = Math.min(furthestPosBySpeed, nextCarPosition - TrafficSimulation.CAR_MINIMUM_DISTANCE);
             }
+
             //Set speed to 0 if it's stuck behind a slow driver
             if (
                     nextCarPosition - initialPosition == TrafficSimulation.CAR_MINIMUM_DISTANCE 
@@ -150,20 +152,25 @@ public class Street {
                 StreetNode endNode = parentGraph.getNodeById(endNodeID);
 
                 Street streetToCrossTo = endNode.carIdIsAllowedToCrossToWhichStreet(id, car.getWantedDirection());
-                if (streetToCrossTo == null) {
+                if (streetToCrossTo == null && initialPosition == newPosition) {
                     car.setSpeed(0);
-                    updatedMap.put(newPosition, car.getId());
-                } else if (!car.hasAlreadyCrossedThisTick()) {
+                }
+                if (streetToCrossTo != null && !car.hasAlreadyCrossedThisTick()) {
                     car.increaseWantedDirection();
                     car.setAlreadyCrossedThisTick(true);
-                    streetToCrossTo.carDrivesIn(car);       
+                    streetToCrossTo.carDrivesIn(car);
+                    
                 } else {
                     updatedMap.put(newPosition, car.getId());
                 }
             } else {
                 updatedMap.put(newPosition, car.getId());
             }
+
+            
+
         }
+
         cars = updatedMap;
     }
 
