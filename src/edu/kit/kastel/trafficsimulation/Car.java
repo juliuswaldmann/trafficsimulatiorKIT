@@ -18,7 +18,7 @@ public class Car {
     private int wantedSpeed;
 
     /** The direction the car wants to go to. Starts with 0. */
-    private int wantedDirection = 1;
+    private int wantedDirection = 0;
 
     /** The meters the car has left in this tick */
     private int metersLeftToDriveThisTick;
@@ -87,14 +87,6 @@ public class Car {
     }
 
     /**
-     * Gets the speed of the car
-     * @return Speed of the car
-     */
-    public int getSpeed() {
-        return currentSpeed;
-    }
-
-    /**
      * sets the speed of the car
      * @param speed the speed the car should have 
      */
@@ -141,15 +133,20 @@ public class Car {
      * Increments the direction by one and returns the new direction
      * @return New direction
      */
-    public int getAndIncreaseWantedDirection() {
-        int direction = wantedDirection;
-        wantedDirection++;
+    public int getWantedDirection() {
+        return wantedDirection;
+    }
 
-        //Reset direction to 0 if it is bigger than 3
-        if (wantedDirection > 4) {
-            wantedDirection = 1;
+    /**
+     * Increments the direction by one and returns the new direction
+     * @return New direction
+     */
+    public int increaseWantedDirection() {
+        wantedDirection++;
+        if (wantedDirection > 3) {
+            wantedDirection = 0;
         }
-        return direction;
+        return wantedDirection;
     }
 
     /**

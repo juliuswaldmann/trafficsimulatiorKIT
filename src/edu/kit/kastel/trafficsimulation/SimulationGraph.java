@@ -192,7 +192,7 @@ public class SimulationGraph {
      */
     public int getCarSpeed(int carId) {
         Car car = carMap.get(carId);
-        return car.getSpeed();
+        return car.getCurrentSpeed();
     }
 
     /**

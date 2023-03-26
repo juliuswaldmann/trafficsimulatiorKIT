@@ -94,7 +94,7 @@ public abstract class StreetNode {
         } 
 
         //this index is guaranteed to be inside the bounds of the "connectedOutputStreets" ArrayList
-        int outputStreetIndex = crossingCar.getAndIncreaseWantedDirection() % connectedOutputStreets.size();
+        int outputStreetIndex = crossingCar.getWantedDirection() % connectedOutputStreets.size();
 
 
         Street outputStreet = parentGraph.getStreetById(connectedOutputStreets.get(outputStreetIndex));
@@ -106,6 +106,8 @@ public abstract class StreetNode {
             ) {
             return;
         }
+
+        crossingCar.increaseWantedDirection();
 
         outputStreet.carDrivesIn(crossingCar);
         inputStreet.removeCrossingCar();
