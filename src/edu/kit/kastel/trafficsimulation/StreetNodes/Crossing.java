@@ -34,19 +34,6 @@ public class Crossing extends StreetNode {
     }
 
     /**
-     * method to handle the crossing of cars at this node from and to the streets.
-     * This method is called by the simulation every time step.
-     */
-    @Override
-    public void handleCrossing() {
-
-        crossFromStreetCars(greenPhaseIndicator);
-
-        updateGreenPhase();        
-
-    }
-
-    /**
      * method to update the green phase of the crossing after every tick
      */
     @Override
@@ -75,7 +62,7 @@ public class Crossing extends StreetNode {
 
     /**
      * method to check if a car is allowed to cross the roundabout to a certain street
-     * @param streetId the id of the street the car is currently on
+     * @param inputStreetId the id of the street the car is currently on
      * @param wantedDirection the direction the car wants to go
      * @return the street the car is allowed to cross to, or null if the car is not allowed to cross
      */

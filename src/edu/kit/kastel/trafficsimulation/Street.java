@@ -1,7 +1,5 @@
 package edu.kit.kastel.trafficsimulation;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.NavigableMap;
 import java.util.Map.Entry;
 
@@ -52,6 +50,7 @@ public class Street {
 
     /**
      * This constructor creates a new street with the given parameters.
+     * @param endNodeID the id of the node the street ends in
      * @param id the id of the street
      * @param parentGraph the parent graph of the street
      * @param length the length of the street in meters
@@ -109,13 +108,10 @@ public class Street {
             Integer nextCarPosition = updatedMap.higherKey(initialPosition); //has to be "Integer" so it can be "null"
 
             if (nextCarPosition == null) { //TODO update comments
-                //the car in front of the current car overtook the current car
                 //the current car is the farthest car on the street
                 nextCarPosition = length; 
                 noNextCar = true;
                 //if there is no car in front we set the nextCarPosition to the street length
-                //if this is the case secondNextCarPosition will also be the street length and
-                //the rest of the code will work perfectly
                 
             }
 
@@ -124,7 +120,6 @@ public class Street {
                 secondNextCarPosition = length;
             }
             
-
             int newPosition;
             int metersLeftAfterNextCar = secondNextCarPosition - nextCarPosition;
             boolean enoughSpaceAfter = metersLeftAfterNextCar >= TrafficSimulation.CAR_MINIMUM_DISTANCE * 2;
@@ -140,7 +135,6 @@ public class Street {
             } else {
                 newPosition = Math.min(furthestPosBySpeed, nextCarPosition - TrafficSimulation.CAR_MINIMUM_DISTANCE);
             }
-
 
             //Set speed to 0 if it's stuck behind a slow driver
             if (
@@ -174,7 +168,6 @@ public class Street {
         }
 
         cars = updatedMap;
-
     }
 
     /**

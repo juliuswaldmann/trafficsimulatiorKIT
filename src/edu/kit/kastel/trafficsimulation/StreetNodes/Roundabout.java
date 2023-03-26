@@ -23,17 +23,6 @@ public class Roundabout extends StreetNode {
     }
 
     /**
-     * method to handle the crossing of cars at this node from and to the streets.
-     * This method is called by the simulation every time step.
-     */
-    @Override
-    public void handleCrossing() {
-        for (Integer streetId : connectedInputStreets) {
-            crossFromStreetCars(streetId);
-        }
-    }
-
-    /**
      * method to check if a car is allowed to cross the roundabout to a certain street
      * @param streetId the id of the street the car is currently on
      * @param wantedDirection the direction the car wants to go
@@ -58,7 +47,6 @@ public class Roundabout extends StreetNode {
     @Override
     public void tick() {
         //do nothing. this is intended
-        
     }
 
 }
