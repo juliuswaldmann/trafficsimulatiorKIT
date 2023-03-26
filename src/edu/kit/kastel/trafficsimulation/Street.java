@@ -101,7 +101,7 @@ public class Street {
             if (nextCarPosition == null) { //TODO update comments
                 //the car in front of the current car overtook the current car
                 //the current car is the farthest car on the street
-                nextCarPosition = length; 
+                nextCarPosition = length + TrafficSimulation.CAR_MINIMUM_DISTANCE; 
                 noNextCar = true;
                 //if there is no car in front we set the nextCarPosition to the street length
                 //if this is the case secondNextCarPosition will also be the street length and
@@ -111,7 +111,7 @@ public class Street {
 
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
             if (secondNextCarPosition == null) {
-                secondNextCarPosition = length;
+                secondNextCarPosition = length + TrafficSimulation.CAR_MINIMUM_DISTANCE;
             }
             
 
