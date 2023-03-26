@@ -230,7 +230,14 @@ public class SimulationGraph {
             nodeEntry.getValue().handleCrossing();
         }
 
-        
+        for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
+            Street street = streetEntry.getValue();
+            Car lastCar = street.getCrossingCar();
+            if (lastCar != null) {
+                lastCar.setSpeed(0);
+            }
+        }
+
         
     }
 
