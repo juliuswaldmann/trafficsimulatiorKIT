@@ -152,26 +152,6 @@ public class Street {
     }
 
     /**
-     * gets the length of the street
-     * @return the length of the street
-     */
-    public int getLength() {
-        return length;
-    }
-
-    /**
-     * gets the last car of the street
-     * @return the last car of the street, null if there is no car on the street
-     */
-    public Car getLastCar() {
-        Entry<Integer, Integer> entry = cars.lastEntry();
-        if (entry == null) {
-            return null;
-        }
-        return parentGraph.getCarById(entry.getValue());
-    }
-
-    /**
      * This method gets the Car that is currently at the
      * end of the street and awaits to cross. It also removes 
      * the car from the street.

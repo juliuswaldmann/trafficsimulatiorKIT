@@ -232,8 +232,8 @@ public class SimulationGraph {
 
         for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
             Street street = streetEntry.getValue();
-            Car lastCar = street.getLastCar();
-            if (lastCar != null && lastCar.getPositionOnStreet() == street.getLength()) {
+            Car lastCar = street.getCrossingCar();
+            if (lastCar != null) {
                 lastCar.setSpeed(0);
             }
         }
