@@ -134,4 +134,14 @@ public abstract class StreetNode {
         return true;
     }
 
+    /**
+     * method to get the street that a car with a specific id is allowed to cross to.
+     * @param streetId the id of the street the car is currently on
+     * @param wantedDirection the direction the car wants to go
+     * @return the street the car is allowed to cross to, null if the car is not allowed to cross
+     */
+    public abstract Street carIdIsAllowedToCrossToWhichStreet(int streetId, int wantedDirection);
+
+    public abstract void tick();
+
 }

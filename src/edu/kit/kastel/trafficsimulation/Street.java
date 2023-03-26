@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.NavigableMap;
 import java.util.Map.Entry;
+
+import edu.kit.kastel.trafficsimulation.StreetNodes.StreetNode;
+
 import java.util.TreeMap;
 
 /**
@@ -30,6 +33,9 @@ public class Street {
     /** The id of this street */
     private int id;
 
+    /** the id of the node the street ends in */
+    private int endNodeID;
+
     /**
      * This Hashmap stores all cars that are currently on a street.
      * The Key in this map is the current distance the cars has to the EndNode.
@@ -52,9 +58,11 @@ public class Street {
      * @param type the type of the street (1 lane or 2 lanes)
      * @param maxSpeed the max speed allowed on the street in m/tick
      */
-    public Street(int id, SimulationGraph parentGraph, int length, int type, int maxSpeed) { 
+    public Street(int endNodeID, int id, SimulationGraph parentGraph, int length, int type, int maxSpeed) { 
         this.length = length;
         this.maxSpeed = maxSpeed;
+
+        this.endNodeID = endNodeID;
 
         // parse the lane count to a boolean whether the street is overtakeable or not
         if (type == 1) {
@@ -84,16 +92,18 @@ public class Street {
      */
     public void updateCarPositions() {
 
-        ArrayList<Integer> keySet = new ArrayList<Integer>(cars.keySet());
-        Collections.sort(keySet);
-
         NavigableMap<Integer, Integer> updatedMap = new TreeMap<>();
 
         Entry<Integer, Integer> entry;
         while ((entry = cars.pollLastEntry()) != null) { //cycle through all cars in order
-
             int initialPosition = entry.getKey();
             Car car = parentGraph.getCarById(entry.getValue());
+            if (car.hasAlreadyCrossedThisTick()) {
+                updatedMap.put(initialPosition, car.getId());
+                continue;
+            }
+
+            car.updateSpeed(maxSpeed);
 
             boolean noNextCar = false;
             Integer nextCarPosition = updatedMap.higherKey(initialPosition); //has to be "Integer" so it can be "null"
@@ -101,7 +111,7 @@ public class Street {
             if (nextCarPosition == null) { //TODO update comments
                 //the car in front of the current car overtook the current car
                 //the current car is the farthest car on the street
-                nextCarPosition = length + TrafficSimulation.CAR_MINIMUM_DISTANCE; 
+                nextCarPosition = length; 
                 noNextCar = true;
                 //if there is no car in front we set the nextCarPosition to the street length
                 //if this is the case secondNextCarPosition will also be the street length and
@@ -111,7 +121,7 @@ public class Street {
 
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
             if (secondNextCarPosition == null) {
-                secondNextCarPosition = length + TrafficSimulation.CAR_MINIMUM_DISTANCE;
+                secondNextCarPosition = length;
             }
             
 
@@ -143,7 +153,23 @@ public class Street {
             car.droveMeters(newPosition - initialPosition);
             car.setPositionOnStreet(newPosition);
 
-            updatedMap.put(newPosition, car.getId());
+            if (newPosition == length && car.getMetersLeftToDrive() > 0) {
+                StreetNode endNode = parentGraph.getNodeById(endNodeID);
+
+                Street streetToCrossTo = endNode.carIdIsAllowedToCrossToWhichStreet(id, car.getWantedDirection());
+                if (streetToCrossTo != null && !car.hasAlreadyCrossedThisTick()) {
+                    car.increaseWantedDirection();
+                    car.setAlreadyCrossedThisTick(true);
+                    streetToCrossTo.carDrivesIn(car);
+                    
+
+                } else {
+                    car.setSpeed(0);
+                    updatedMap.put(newPosition, car.getId());
+                }
+            } else {
+                updatedMap.put(newPosition, car.getId());
+            }
 
         }
 

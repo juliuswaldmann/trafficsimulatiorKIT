@@ -1,6 +1,7 @@
 package edu.kit.kastel.trafficsimulation.StreetNodes;
 
 import edu.kit.kastel.trafficsimulation.SimulationGraph;
+import edu.kit.kastel.trafficsimulation.Street;
 
 /**
  * this class represents a crossing in the simulation.
@@ -46,6 +47,14 @@ public class Crossing extends StreetNode {
     }
 
     /**
+     * method to update the green phase of the crossing after every tick
+     */
+    @Override
+    public void tick() {
+        updateGreenPhase();
+    }
+
+    /**
      * method to update the green phase of the crossing
      * This method is called by the simulation every time step.
      * It switches the green phase to the next street after the green phase duration has passed.
@@ -62,5 +71,29 @@ public class Crossing extends StreetNode {
         if (greenPhaseIndicator >= connectedInputStreets.size()) {
             greenPhaseIndicator = 0;
         }
+    }
+
+    /**
+     * method to check if a car is allowed to cross the roundabout to a certain street
+     * @param streetId the id of the street the car is currently on
+     * @param wantedDirection the direction the car wants to go
+     * @return the street the car is allowed to cross to, or null if the car is not allowed to cross
+     */
+    @Override
+    public Street carIdIsAllowedToCrossToWhichStreet(int inputStreetId, int wantedDirection) {
+
+        if (connectedInputStreets.indexOf(inputStreetId) != greenPhaseIndicator) {
+            return null;
+        }
+
+        int outputStreetId = connectedOutputStreets.get(wantedDirection % connectedOutputStreets.size());
+        Street outputStreet = parentGraph.getStreetById(outputStreetId);
+
+        if (outputStreet.hasSpaceForCar()) {
+            return outputStreet;
+        } else {
+            return null;
+        }
+
     }
 }

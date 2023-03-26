@@ -1,6 +1,9 @@
 package edu.kit.kastel.trafficsimulation;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import edu.kit.kastel.trafficsimulation.StreetNodes.Crossing;
@@ -19,14 +22,14 @@ public class SimulationGraph {
     /** counter that is increased in order to get a new streetId */ 
     private int streetIdentifierCounter = 0;
     
-    /** the HashMap containing all streets mapped to their ids */
-    private HashMap<Integer, Street> streetMap = new HashMap<>();
+    /** the Map containing all streets mapped to their ids */
+    private NavigableMap<Integer, Street> streetMap = new TreeMap<>();
 
-    /** the HashMap containing all nodes (crossings) mapped to their ids */
-    private HashMap<Integer, StreetNode> nodeMap = new HashMap<>();
+    /** the Map containing all nodes (crossings) mapped to their ids */
+    private NavigableMap<Integer, StreetNode> nodeMap = new TreeMap<>();
 
     /** the HashMap containing all cars mapped to their ids */
-    private HashMap<Integer, Car> carMap = new HashMap<>();
+    private HashMap<Integer, Car> carMap = new LinkedHashMap<>();
 
     /**
      * method to get a given car from the carMap by its id
@@ -35,6 +38,15 @@ public class SimulationGraph {
      */
     public Car getCarById(int id) {
         return carMap.get(id);
+    }
+
+    /**
+     * method to get a given node from the nodeMap by its id
+     * @param id the id of the node
+     * @return the node with the given id
+     */
+    public StreetNode getNodeById(int id) {
+        return nodeMap.get(id);
     }
 
     /**
@@ -92,7 +104,7 @@ public class SimulationGraph {
 
         int id = getNewStreetID();
 
-        Street street = new Street(id, this, length, type, maxSpeed);
+        Street street = new Street(endNode, id, this, length, type, maxSpeed);
 
         streetMap.put(id, street);
 
@@ -208,36 +220,24 @@ public class SimulationGraph {
 
     /**
      * this method simulates one tick of the simulation.
-     * it updates the position of all cars and handles crossing
+     * it updates the position of all cars
      */
     public void tick() {
         //set all cars to not crossed this tick
-        //and update their speed
         for (Entry<Integer, Car> carEntry : carMap.entrySet()) {
             Car car = carEntry.getValue();
             car.setAlreadyCrossedThisTick(false);
-            int maxSpeed = streetMap.get(car.getOnStreetId()).getMaxSpeed();
-            car.updateSpeed(maxSpeed);
         }
 
         //update all car positions
-        for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
-            streetEntry.getValue().updateCarPositions();
+        for (Integer streetKey : streetMap.navigableKeySet()) {
+            streetMap.get(streetKey).updateCarPositions();
         }
-
-        //handle crossing
-        for (Entry<Integer, StreetNode> nodeEntry : nodeMap.entrySet()) {
-            nodeEntry.getValue().handleCrossing();
+        
+        //tick all nodes
+        for (Integer nodeKey : nodeMap.navigableKeySet()) {
+            nodeMap.get(nodeKey).tick();
         }
-
-        for (Entry<Integer, Street> streetEntry : streetMap.entrySet()) {
-            Street street = streetEntry.getValue();
-            Car lastCar = street.getCrossingCar();
-            if (lastCar != null) {
-                lastCar.setSpeed(0);
-            }
-        }
-
         
     }
 
