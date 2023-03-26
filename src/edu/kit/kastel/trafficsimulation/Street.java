@@ -101,6 +101,7 @@ public class Street {
                 updatedMap.put(initialPosition, car.getId());
                 continue;
             }
+            int initialOnStreetId = car.getOnStreetId();
 
             car.updateSpeed(maxSpeed);
 
@@ -111,9 +112,7 @@ public class Street {
                 //the current car is the farthest car on the street
                 nextCarPosition = length; 
                 noNextCar = true;
-                //if there is no car in front we set the nextCarPosition to the street length
             }
-
             Integer secondNextCarPosition = updatedMap.higherKey(nextCarPosition); 
             if (secondNextCarPosition == null) {
                 secondNextCarPosition = length;
@@ -149,21 +148,22 @@ public class Street {
             //if the car is at the end of the street and it still wants to keep going
             if (newPosition == length && car.getMetersLeftToDrive() > 0) {
                 StreetNode endNode = parentGraph.getNodeById(endNodeID);
-
                 Street streetToCrossTo = endNode.carIdIsAllowedToCrossToWhichStreet(id, car.getWantedDirection());
-                if (streetToCrossTo == null && initialPosition == newPosition) {
-                    car.setSpeed(0);
-                }
                 if (streetToCrossTo != null && !car.hasAlreadyCrossedThisTick()) {
                     car.increaseWantedDirection();
                     car.setAlreadyCrossedThisTick(true);
                     streetToCrossTo.carDrivesIn(car);
-                    
                 } else {
                     updatedMap.put(newPosition, car.getId());
                 }
             } else {
                 updatedMap.put(newPosition, car.getId());
+            }
+            if (
+                    (car.getPositionOnStreet() == initialPosition && car.getOnStreetId() == initialOnStreetId)
+                    || (initialPosition == length && car.getPositionOnStreet() == 0)
+            ) {
+                car.setSpeed(0);
             }
         }
         cars = updatedMap;
