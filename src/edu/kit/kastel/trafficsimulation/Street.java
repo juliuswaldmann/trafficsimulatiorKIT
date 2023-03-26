@@ -165,6 +165,7 @@ public class Street {
             ) {
                 car.setSpeed(0);
             }
+
         }
         cars = updatedMap;
     }

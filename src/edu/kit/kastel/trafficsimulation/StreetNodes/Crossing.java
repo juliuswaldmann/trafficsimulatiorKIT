@@ -17,10 +17,10 @@ public class Crossing extends StreetNode {
     private int greenPhaseDuration;
     
     /** This variable stores which of the connected streets is currently green */
-    private int greenPhaseIndicator;
+    private int greenPhaseIndicator = 0;
 
     /** the timer that counts the length of the current green phase */
-    private int greenPhaseTimer;
+    private int greenPhaseTimer = 0;
 
     /**
      * constructor for a new crossing
@@ -31,6 +31,7 @@ public class Crossing extends StreetNode {
     public Crossing(SimulationGraph parentGraph, int nodeID, int greenPhaseDuration) { 
         this.nodeID = nodeID;
         this.parentGraph = parentGraph;
+        this.greenPhaseDuration = greenPhaseDuration;
     }
 
     /**
@@ -47,12 +48,13 @@ public class Crossing extends StreetNode {
      * It switches the green phase to the next street after the green phase duration has passed.
      */
     private void updateGreenPhase() {
-        greenPhaseTimer--;
-        if (greenPhaseTimer != 0) {
+        greenPhaseTimer++;
+
+        if (greenPhaseTimer != greenPhaseDuration) {
             return;
         }
 
-        greenPhaseTimer = greenPhaseDuration;
+        greenPhaseTimer = 0;
 
         greenPhaseIndicator++;
         if (greenPhaseIndicator >= connectedInputStreets.size()) {
@@ -68,12 +70,21 @@ public class Crossing extends StreetNode {
      */
     @Override
     public Street carIdIsAllowedToCrossToWhichStreet(int inputStreetId, int wantedDirection) {
-
         if (connectedInputStreets.indexOf(inputStreetId) != greenPhaseIndicator) {
             return null;
         }
 
-        int outputStreetId = connectedOutputStreets.get(wantedDirection % connectedOutputStreets.size());
+        int turnDirection = wantedDirection % connectedOutputStreets.size();
+
+        // if (wantedDirection >= connectedOutputStreets.size()) {
+        //     turnDirection = 0;
+        // } else {
+        //     turnDirection = wantedDirection;
+        // }
+
+        
+
+        int outputStreetId = connectedOutputStreets.get(turnDirection);
         Street outputStreet = parentGraph.getStreetById(outputStreetId);
 
         if (outputStreet.hasSpaceForCar()) {
