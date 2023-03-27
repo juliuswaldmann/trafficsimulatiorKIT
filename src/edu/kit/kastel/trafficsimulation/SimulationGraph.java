@@ -223,6 +223,12 @@ public class SimulationGraph {
      * it updates the position of all cars
      */
     public void tick() {
+        
+        //tick all nodes
+        for (Integer nodeKey : nodeMap.navigableKeySet()) {
+            nodeMap.get(nodeKey).tick();
+        }
+
         //set all cars to not crossed this tick
         for (Entry<Integer, Car> carEntry : carMap.entrySet()) {
             Car car = carEntry.getValue();
@@ -232,11 +238,6 @@ public class SimulationGraph {
         //update all car positions
         for (Integer streetKey : streetMap.navigableKeySet()) {
             streetMap.get(streetKey).updateCarPositions();
-        }
-        
-        //tick all nodes
-        for (Integer nodeKey : nodeMap.navigableKeySet()) {
-            nodeMap.get(nodeKey).tick();
         }
         
     }

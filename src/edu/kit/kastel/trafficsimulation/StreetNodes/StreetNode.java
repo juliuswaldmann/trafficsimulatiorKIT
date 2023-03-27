@@ -15,6 +15,18 @@ import edu.kit.kastel.trafficsimulation.Street;
  */
 public abstract class StreetNode {
 
+    /** the maximum number of input streets that are allowed to be connected to a node */
+    static final int MAX_INPUT_STREETS = 4;
+
+    /** the maximum number of output streets that are allowed to be connected to a node */
+    static final int MAX_OUTPUT_STREETS = 4;
+
+    /** the minimum number of input streets that are allowed to be connected to a node */
+    static final int MIN_INPUT_STREETS = 1;
+
+    /** the minimum number of output streets that are allowed to be connected to a node */
+    static final int MIN_OUTPUT_STREETS = 1;
+
     /** the id of the node */
     protected int nodeID;
 
@@ -74,10 +86,10 @@ public abstract class StreetNode {
      */
     public boolean isValid() {
         if (
-                connectedInputStreets.size() < 1
-                || connectedOutputStreets.size() < 1
-                || connectedInputStreets.size() > 4
-                || connectedOutputStreets.size() > 4
+                connectedInputStreets.size() < MIN_INPUT_STREETS
+                || connectedOutputStreets.size() < MIN_OUTPUT_STREETS
+                || connectedInputStreets.size() > MAX_INPUT_STREETS
+                || connectedOutputStreets.size() > MAX_OUTPUT_STREETS
         ) {
             return false;
         }

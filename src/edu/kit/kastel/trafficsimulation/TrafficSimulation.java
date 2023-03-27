@@ -75,6 +75,18 @@ public class TrafficSimulation {
     /** the minimum speed limit a street must have */
     static final int STREET_MIN_SPEED_LIMIT = 5;
 
+    /** The minimum speed a car wants to have */
+    static final int MIN_WANTED_SPEED = 20;
+
+    /** The maximum speed a car wants to have */
+    static final int MAX_WANTED_SPEED = 40;
+
+    /** The minimum acceleration a car can have */
+    static final int MIN_ACCELERATION = 1;
+
+    /** The maximum acceleration a car can have */
+    static final int MAX_ACCELERATION = 10;
+
     /** the scanner object used by the class to get input from the command line*/
     private Scanner scanner;
 
@@ -274,14 +286,17 @@ public class TrafficSimulation {
             int speedLimit = Integer.parseInt(subStrings[4]);
 
             //now check the validity of these numbers
+
+            boolean streetLengthIsNotValid = (streetLength < STREET_MIN_LENGTH || streetLength > STREET_MAX_LENGTH);
+            boolean speedLimitIsNotValid = (speedLimit < STREET_MIN_SPEED_LIMIT || speedLimit > STREET_MAX_SPEED_LIMIT);
+            boolean streetTypeIsNotValid = (streetType != 1 && streetType != 2);
+
             if (
                     startingNodeId < 0 
                     || endNodeId < 0 
-                    || streetLength < STREET_MIN_LENGTH 
-                    || streetLength > STREET_MAX_LENGTH 
-                    || speedLimit < STREET_MIN_SPEED_LIMIT 
-                    || speedLimit > STREET_MAX_SPEED_LIMIT
-                    || !(streetType == 1 || streetType == 2)
+                    || streetLengthIsNotValid
+                    || speedLimitIsNotValid
+                    || streetTypeIsNotValid
             ) {
                 System.err.println(String.format(INVALID_FILE_LINE_ERROR, string));
                 return false;
@@ -329,10 +344,10 @@ public class TrafficSimulation {
             if (
                     carId < 0 
                     || startingStreetId < 0 
-                    || wantedSpeed < 20
-                    || wantedSpeed > 40
-                    || acceleration < 1
-                    || acceleration > 10
+                    || wantedSpeed < MIN_WANTED_SPEED
+                    || wantedSpeed > MAX_WANTED_SPEED
+                    || acceleration < MIN_ACCELERATION
+                    || acceleration > MAX_ACCELERATION
             ) {
                 System.err.println(String.format(INVALID_FILE_LINE_ERROR, string));
                 return false;
